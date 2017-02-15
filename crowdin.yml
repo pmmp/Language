@@ -1,0 +1,3 @@
+files:
+  - source: eng.ini
+    translation: /%three_letters_code%.ini
