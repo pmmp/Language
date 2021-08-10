@@ -79,7 +79,8 @@ function parse_language_file(string $path, string $code) : ?array{
 }
 
 if(count($argv) !== 2){
-	exit("Required arguments: path");
+	fwrite(STDERR, "Required arguments: path\n");
+	exit(1);
 }
 $eng = parse_language_file($argv[1], "eng");
 if($eng === null){
