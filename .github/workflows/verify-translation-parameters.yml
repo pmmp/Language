@@ -15,7 +15,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@2.12.0
         with:
-          php: 8.0
+          php-version: 8.0
 
       - name: Verify translation parameters
-        run: php .github/workflows/verify-translation-parameters.php
+        run: php .github/workflows/verify-translation-parameters.php ${{ github.workspace }}
