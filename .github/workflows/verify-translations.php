@@ -27,6 +27,8 @@ use function count;
 use function fwrite;
 use function in_array;
 use function parse_ini_file;
+use function preg_match;
+use function preg_match_all;
 use const INI_SCANNER_RAW;
 use const PHP_EOL;
 use const STDERR;
@@ -37,6 +39,22 @@ const EXPECTED_IDENTICAL_TRANSLATIONS = [
 	"chat.type.announcement" => true,
 	"chat.type.emote" => true,
 	"chat.type.text" => true,
+];
+
+const EXPECTED_IDENTICAL_TRANSLATIONS_SPECIFIC = [
+	"nld" => [
+		"commands.deop.success" => true,
+		"commands.op.success" => true,
+		"commands.seed.success" => true,
+		"potion.wither" => true,
+		"pocketmine.command.plugins.success" => true,
+		"server_port" => true,
+	]
+];
+
+const EXPECTED_IDENTICAL_TRANSLATION_PATTERNS = [
+	'/^commands\..+\.usage$/',
+	'/^pocketmine\.command\..+\.usage$/',
 ];
 
 /**
@@ -57,10 +75,19 @@ function verify_translations(array $baseLanguageDef, string $altLanguageName, ar
 			continue;
 		}
 		$altString = $altLanguageDef[$key];
-		if($baseString === $altString && !isset(EXPECTED_IDENTICAL_TRANSLATIONS[$key])){
-			fwrite(STDERR, "$altLanguageName: bogus translation for string $key" . PHP_EOL);
-			$ok = false;
-			continue;
+		if($altString === $baseString && $altLanguageName !== "eng" && !isset(EXPECTED_IDENTICAL_TRANSLATIONS[$key]) && !isset(EXPECTED_IDENTICAL_TRANSLATIONS_SPECIFIC[$altLanguageName][$key])){
+			$regexMatch = false;
+			foreach(EXPECTED_IDENTICAL_TRANSLATION_PATTERNS as $pattern){
+				if(preg_match($pattern, $key)){
+					$regexMatch = true;
+					break;
+				}
+			}
+			if(!$regexMatch){
+				fwrite(STDERR, "$altLanguageName: bogus translation of string $key" . PHP_EOL);
+				$ok = false;
+				continue;
+			}
 		}
 		$baseParams = preg_match_all($parameterRegex, $baseString, $baseMatches);
 		$altParams = preg_match_all($parameterRegex, $altString, $altMatches);
