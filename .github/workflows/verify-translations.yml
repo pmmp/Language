@@ -1,4 +1,4 @@
-name: Verify translation parameters
+name: Verify translations
 
 on:
   push:
@@ -17,5 +17,5 @@ jobs:
         with:
           php-version: 8.0
 
-      - name: Verify translation parameters
-        run: php .github/workflows/verify-translation-parameters.php ${{ github.workspace }}
+      - name: Verify translations
+        run: php .github/workflows/verify-translations.php ${{ github.workspace }}

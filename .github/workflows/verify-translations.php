@@ -31,6 +31,14 @@ use const INI_SCANNER_RAW;
 use const PHP_EOL;
 use const STDERR;
 
+const EXPECTED_IDENTICAL_TRANSLATIONS = [
+	"ability.noclip" => true,
+	"chat.type.admin" => true,
+	"chat.type.announcement" => true,
+	"chat.type.emote" => true,
+	"chat.type.text" => true,
+];
+
 /**
  * @param string[]                      $baseLanguageDef
  * @param string[]                      $altLanguageDef
@@ -40,7 +48,7 @@ use const STDERR;
  *
  * @return bool true if everything is OK, false otherwise
  */
-function verify_translation_parameters(array $baseLanguageDef, string $altLanguageName, array $altLanguageDef) : bool{
+function verify_translations(array $baseLanguageDef, string $altLanguageName, array $altLanguageDef) : bool{
 	$parameterRegex = '/{%(.+?)}/';
 
 	$ok = true;
@@ -49,6 +57,11 @@ function verify_translation_parameters(array $baseLanguageDef, string $altLangua
 			continue;
 		}
 		$altString = $altLanguageDef[$key];
+		if($baseString === $altString && !isset(EXPECTED_IDENTICAL_TRANSLATIONS[$key])){
+			fwrite(STDERR, "$altLanguageName: bogus translation for string $key" . PHP_EOL);
+			$ok = false;
+			continue;
+		}
 		$baseParams = preg_match_all($parameterRegex, $baseString, $baseMatches);
 		$altParams = preg_match_all($parameterRegex, $altString, $altMatches);
 		if($baseParams === false || $altParams === false){
@@ -90,13 +103,16 @@ if($eng === null){
 $exit = 0;
 foreach(new \RegexIterator(new \FilesystemIterator($argv[1], \FilesystemIterator::CURRENT_AS_PATHNAME), "/([a-z]+)\.ini$/", \RegexIterator::GET_MATCH) as $match){
 	$code = $match[1];
+	if($code === "eng"){
+		continue;
+	}
 	$otherLang = parse_language_file($argv[1], $code);
 	if($otherLang === null){
 		fwrite(STDERR, "Error parsing $code.ini\n");
 		$exit = 1;
 		continue;
 	}
-	if(!verify_translation_parameters($eng, $code, $otherLang)){
+	if(!verify_translations($eng, $code, $otherLang)){
 		fwrite(STDERR, "Errors found in $code.ini\n");
 		$exit = 1;
 		continue;
