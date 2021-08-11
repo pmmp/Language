@@ -69,6 +69,12 @@ function verify_translations(array $baseLanguageDef, string $altLanguageName, ar
 			}
 		}
 	}
+	foreach($altLanguageDef as $key => $altString){
+		if(!isset($baseLanguageDef[$key])){
+			fwrite(STDERR, "$altLanguageName: unexpected extra string $key with no base in eng.ini" . PHP_EOL);
+			$ok = false;
+		}
+	}
 	return $ok;
 }
 
