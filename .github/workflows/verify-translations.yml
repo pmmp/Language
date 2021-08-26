@@ -2,6 +2,8 @@ name: Verify translations
 
 on:
   push:
+    branches-ignore:
+      - 'l10n_*'
   pull_request:
   workflow_dispatch:
 
