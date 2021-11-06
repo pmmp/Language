@@ -1,0 +1,27 @@
+name: Tag new patch releases on branch push
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Tag new patch release
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        base-version: [ 1.0 ]
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Tag new version
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git tag ${{ matrix.base-version }}.${{ github.run_number }}
+      
+      - name: Push changes
+        run: git push origin --tags
