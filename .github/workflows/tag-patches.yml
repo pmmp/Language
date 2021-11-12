@@ -9,7 +9,7 @@ jobs:
   build:
     name: Tag new patch release
     runs-on: ubuntu-latest
-    if: "startsWith(github.event.head_commit.message, 'New translations')"
+    if: "startsWith(github.event.head_commit.message, 'New translations') || startsWith(github.event.head_commit.message, 'New Crowdin updates') "
 
     strategy:
       matrix:
