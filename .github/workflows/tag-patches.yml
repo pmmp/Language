@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        base-version: [ "2.1" ]
+        base-version: [ "2.2" ]
 
     steps:
       - uses: actions/checkout@v2
