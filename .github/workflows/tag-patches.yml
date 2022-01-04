@@ -2,7 +2,7 @@ name: Tag new patch releases on branch push
 
 on:
   push:
-    branches: [ master ]
+    branches: [ stable ]
   workflow_dispatch:
 
 jobs:
@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        base-version: [ "2.2" ]
+        base-version: [ "2.3 ]
 
     steps:
       - uses: actions/checkout@v2
