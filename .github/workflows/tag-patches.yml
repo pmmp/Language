@@ -11,18 +11,22 @@ jobs:
     runs-on: ubuntu-latest
     if: "github.event_name == 'workflow_dispatch' || startsWith(github.event.head_commit.message, 'New translations') || startsWith(github.event.head_commit.message, 'New Crowdin updates') "
 
-    strategy:
-      matrix:
-        base-version: [ "2.3" ]
-
     steps:
       - uses: actions/checkout@v2
       
       - name: Tag new version
         run: |
+          BASE_VERSION="2.4"
+          PATCH_VERSION_OFFSET=33
+
+          PATCH_VERSION=$(($GITHUB_RUN_NUMBER-$PATCH_VERSION_OFFSET))
+          FULL_VERSION="$BASE_VERSION.$PATCH_VERSION"
+
+          echo "Tagging version $FULL_VERSION"
+
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git tag ${{ matrix.base-version }}.${{ github.run_number }}
+          git tag "$FULL_VERSION"
       
       - name: Push changes
         run: git push origin --tags
