@@ -10,6 +10,7 @@ To contribute translations, please use the [Crowdin Translation Page](http://tra
 Only English should be modified directly. To add new strings, add them ONLY to eng.ini. Crowdin will then synchronize them and the new strings will be put up for translation within Crowdin.
 
 ### Versioning
+- Versions must be updated in [`tag-patches.yml` workflow](.github/workflows/tag-patches.yml#L19).
 - When removing a string, or adding/removing/renaming parameters, bump the major version, e.g. `2.8.0` -> `3.0.0`
 - When adding new strings, bump the minor version, e.g. `2.8.0` -> `2.9.0`
 - Patches are automatically tagged by GitHub Actions whenever new translations are merged from Crowdin.
