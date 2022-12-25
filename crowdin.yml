@@ -4,3 +4,4 @@ files:
     languages_mapping:
       three_letters_code:
         zh-CN: chs
+        pt-BR: bra
