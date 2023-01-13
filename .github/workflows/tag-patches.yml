@@ -16,8 +16,8 @@ jobs:
       
       - name: Tag new version
         run: |
-          BASE_VERSION="2.16"
-          PATCH_VERSION_OFFSET=82
+          BASE_VERSION="2.17"
+          PATCH_VERSION_OFFSET=84
 
           PATCH_VERSION=$(($GITHUB_RUN_NUMBER-$PATCH_VERSION_OFFSET))
           FULL_VERSION="$BASE_VERSION.$PATCH_VERSION"
