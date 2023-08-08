@@ -10,6 +10,7 @@ jobs:
     name: Tag new patch release
     runs-on: ubuntu-latest
     if: "github.event_name == 'workflow_dispatch' || startsWith(github.event.head_commit.message, 'New translations') || startsWith(github.event.head_commit.message, 'New Crowdin updates') "
+    concurrency: tag-patches
 
     steps:
       - uses: actions/checkout@v3
