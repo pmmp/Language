@@ -4,6 +4,7 @@ on:
   schedule:
     - cron: 0 21 * * * #every day at 9pm
   workflow_dispatch:
+  push:
 
 jobs:
   download:
