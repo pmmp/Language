@@ -36,13 +36,12 @@ jobs:
 
       - name: Delete translation files with no translations
         run: |
-          for file in $(ls *.ini); do
-            # Files with no translations usually have only ; comments in them - delete these to reduce clutter
-            if [[ ! -z $(grep -v -P '^\s*;' $file) ]]; then
+          for file in *.ini; do
+            if grep -q -P '^[A-Za-z0-9_\-\.]+=' $file; then
               echo "Not empty: $file"
             else
               echo "Deleting empty file: $file"
-              rm $file
+              rm "$file"
             fi
           done
 
