@@ -1,0 +1,42 @@
+name: Download new translations from Crowdin
+
+on:
+  schedule:
+    - cron: 0 21 * * * #every day at 9pm
+  workflow_dispatch:
+
+jobs:
+  download:
+    name: Download translations
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      
+      - name: Download translations
+        uses: crowdin/github-action@v2
+        with:
+          upload_sources: false
+          upload_translations: false
+          download_translations: true
+          create_pull_request: false
+          push_translations: false
+          crowdin_branch_name: ${{ github.ref_name }}
+        env:
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
+      - name: Post-process placeholders back into PocketMine format
+        run: |
+          sed -i -r 's/\{([A-Za-z\d]+)\}/\{%\1\}/g' *.ini
+          git diff
+          git status
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          add-paths: '*.ini'
+          commit-message: 'New translations from Crowdin'
+          branch: crowdin-auto-fetch/${{ github.ref_name }}
+          title: 'New translations from Crowdin'
