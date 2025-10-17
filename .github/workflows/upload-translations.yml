@@ -16,7 +16,7 @@ jobs:
 
       - name: Preprocess eng.ini placeholders so Crowdin can understand them
         run: |
-          sed -i -E 's/\{%([A-Za-z\d]+)\}/\{\1\}/' eng.ini
+          sed -i -r 's/\{%([A-Za-z\d]+)\}/\{\1\}/' eng.ini
           cat eng.ini
 
       - name: Upload eng.ini to Crowdin
