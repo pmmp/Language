@@ -34,6 +34,18 @@ jobs:
           git diff
           git status
 
+      - name: Delete translation files with no translations
+        run: |
+          for file in $(ls *.ini); do
+            # Files with no translations usually have only ; comments in them - delete these to reduce clutter
+            if [[ ! -z $(grep -v '^\s*;' $file) ]]; then
+              echo "Not empty: $file"
+            else
+              echo "Deleting empty file: $file"
+              rm $file
+            fi
+          done
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
